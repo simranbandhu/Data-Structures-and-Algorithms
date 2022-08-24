@@ -1,0 +1,152 @@
+#include <iostream>
+using namespace std;
+
+class trienode{
+  public:
+  char data;
+  trienode* children[26];
+  bool isterminal;
+  
+  trienode(char ch){
+      this->data = ch;
+      for(int i=0; i<26; i++){
+          children[i] = NULL;
+      }
+      isterminal = false;
+  }
+  
+};
+
+class trie{
+    public:
+    trienode* root ;
+    
+    trie(){
+        root = new trienode('\0');
+    }
+    
+     void insert(trienode* root, string word){
+        //base case
+        if(word.length() == 0){
+            root->isterminal = true;
+            return ;
+        }
+        int index = word[0] - 'A';
+        
+        trienode* child;
+        //present
+        if(root->children[index] != NULL){
+            child = root->children[index]; 
+        }
+        else{
+            //absent
+            child = new trienode(word[0]);
+            root->children[index] = child;
+        }
+        
+        //recursion
+        insert(child, word.substr(1));
+    }
+    
+    
+    void insertword(string word){
+        insert(root, word);
+    }
+    
+    
+    //searching
+    
+    bool search(trienode* root, string word){
+        //base case
+        if(word.length() == 0){
+            return root->isterminal ;
+        }
+        int index = word[0] - 'A';
+        trienode* child;
+        //present
+        if(root->children[index] != NULL){
+            child = root->children[index];
+        }
+        else{
+            //absent
+            return false;
+        }
+        
+        //recursion
+        return search(child, word.substr(1));
+        
+    }
+    bool searchword(string word){
+        return search(root, word);
+    }
+    
+    bool prefixdata(trienode* root, string word){
+        //base case
+        if(word.length() == 0){
+            return true ;
+        }
+        int index = word[0] - 'a';
+        trienode* child;
+        //present
+        if(root->children[index] != NULL){
+            child = root->children[index];
+        }
+        else{
+            //absent
+            return false;
+        }
+        
+        //recursion
+        return prefixdata(child, word.substr(1));
+        
+    }
+    
+    bool startwith(string word){
+        return prefixdata(root, word);
+    }
+    
+    void removedata(trienode* root, string word){
+        //base case
+        if(word.length() == 0){
+            root->isterminal = false;
+            return ;
+        }
+        int index = word[0] - 'A';
+            trienode* child;
+
+            if(root->children[index] != NULL) {
+                child = root->children[index];
+            }
+            else {
+                // absent
+                cout << "Word not found!! Unable to delete!!\n";
+                return;
+            }
+            
+            removedata(child,word.substr(1));
+    }
+    
+    void removed(string word){
+        removedata(root, word);
+    }
+    
+    
+};
+
+int main()
+{
+    trie *t = new trie();
+    t->insertword("ARMSTRONG");
+    t->insertword("DO");
+    cout<<"present or not " << t->searchword("ARM") <<endl;
+    cout<<"present or not " << t->searchword("DO") <<endl;
+    
+    
+    cout<<"prefix is present or not "<<t->startwith("ARM") << endl;
+    
+    t->removed("DO");
+    cout<<"present or not " << t->searchword("DO") <<endl;;
+    
+
+    return 0;
+}
