@@ -1,0 +1,68 @@
+#BFS
+
+
+
+ void bfs(unordered_map<int, set<int>> &adjlist, unordered_map<int,bool> &visited, vector<int> &ans, int node){
+
+    queue<int> q;
+
+    q.push(node);
+
+    visited[node] = 1;
+
+    
+
+    while(!q.empty()){
+
+        int frontnode = q.front();
+
+        q.pop();
+
+        
+
+        ans.push_back(frontnode);
+
+        
+
+        for(auto i : adjlist[frontnode]){
+
+            if(!visited[i]){
+
+                q.push(i);
+
+                visited[i] = 1;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+
+
+#DFS
+
+
+
+void dfs(int node, unordered_map<int,bool> &visited, unordered_map<int,list<int>> &adjlist, vector<int> &component){
+
+    component.push_back(node);
+
+    visited[node] = true;
+
+    
+
+    for(auto i : adjlist[node]){
+
+        if(!visited[i]){
+
+            dfs(i, visited, adjlist, component);
+
+        }
+
+    }
+
+}
