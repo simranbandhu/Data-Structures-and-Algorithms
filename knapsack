@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector> 
+using namespace std;
+
+int solve(vector<int>& val, vector<int>& wt, int i, int capacity){
+    
+    //base case
+    if(i == val.size() || capacity == 0){
+        return 0;
+    }
+    int include = 0;
+    if(capacity >= wt[i]){
+        include = val[i] + solve(val, wt, i+1, capacity - wt[i]);
+    }
+    int exclude = solve(val, wt, i+1, capacity);
+    
+    return max(include, exclude);
+}
+
+int main()
+{
+    int n = 3;
+    vector<int> val, wt;
+    vector<int> dp;
+    val.push_back(60);
+    val.push_back(100);
+    val.push_back(120);
+    
+    wt.push_back(10);
+    wt.push_back(20);
+    wt.push_back(30);
+    
+    int capacity = 50;
+    
+    int ans = solve(val, wt, 0, capacity, dp);
+    
+    cout<<"answer is : "<<ans<<endl;
+    
+
+    return 0;
+}
