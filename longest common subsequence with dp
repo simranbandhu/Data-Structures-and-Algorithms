@@ -1,0 +1,76 @@
+class Solution {
+public:
+    
+    int solve(string& t1, string& t2, int i, int j, vector<vector<int>>& dp){
+        //base case
+        if(i == t1.size() || j == t2.size()){
+            return 0;
+        }
+        
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+
+        if(t1[i] == t2[j]){
+            dp[i][j] = 1 + solve(t1, t2, i+1, j+1, dp);
+        }
+        else{
+            dp[i][j] = max(solve(t1,t2,i+1,j, dp), solve(t1,t2,i,j+1, dp));
+        }
+        return dp[i][j];
+    }
+
+
+    int solvetab(string& t1, string& t2){
+        vector<vector<int>> dp(t1.length()+1, vector<int>(t2.length()+1, 0));
+
+        for(int i=t1.length()-1; i>=0; i--){
+            for(int j=t2.length()-1; j>=0; j--){
+                
+                if(t1[i] == t2[j]){
+                    dp[i][j] = 1 + dp[i+1][j+1];
+                }
+                else{
+                    dp[i][j] = max(dp[i+1][j], dp[i][j+1]);
+                }
+                
+                }
+        }
+        return dp[0][0];
+    }
+
+     int solvespace(string& t1, string& t2){
+       
+       vector<int> next(t2.length()+1, 0);
+       vector<int> curr(t2.length()+1, 0);
+
+
+        for(int i=t1.length()-1; i>=0; i--){
+            for(int j=t2.length()-1; j>=0; j--){
+                int ans = 0;
+                if(t1[i] == t2[j]){
+                    ans = 1 + next[j+1];
+                }
+                else{
+                    ans = max(next[j], curr[j+1]);
+                }
+                curr[j] = ans;
+            }
+            next = curr;
+        }
+        return next[0];
+    }
+    
+       
+    int longestCommonSubsequence(string text1, string text2) {
+        
+        // vector<vector<int>> dp(text1.length(), vector<int>(text2.length(), -1));
+        // int ans = solve(text1,text2, 0, 0, dp);
+
+        // int ans = solvetab(text1, text2);
+
+        int ans = solvespace(text1, text2);
+        
+        return ans;
+    }
+};
